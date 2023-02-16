@@ -1,0 +1,15 @@
+To open php files with xampp in linux:
+
+1. Download the XAMPP package for linux from this website: https://www.apachefriends.org/download.html
+	-Make sure you do not have apache2 installed, as this will mess with XAMPP later on. If you do, use 'sudo apt-get remove apache2' to remove the package.
+  -you need to run "sudo systemctl stop nginx" if you have nginx. Basically, XAMPP comes with apache webserver, any/all other webserver needs to be removed or stopped
+  -"sudo systemctl stop mysql" -- to stop mysql as well.  XAMPP will start it. but it prefers this is stopped.
+2. Make the downloaded file executable by using 'sudo chmod 755 [package_name]'
+	-You can confirm permission by using 'ls -l [package_name]'
+3. Run the package using 'sudo ./[package_name]' and confirm yes for all prompts
+4. After installation finishes (this usually takes some time), use 'sudo /opt/lampp/lampp start' to start the service
+	-If you forgot to remove the apache2 package earlier, please do so now and us 'sudo /opt/lampp/lampp restart' to reboot the service
+5. Check that XAMPP is running properly by opening your browser and going to either 'localhost/dashboard' or 'penguin.linux.test/dashboard'. The XAMPP dashboard should show up.
+	-For regular linux installations such as ubuntu and debian, localhost should be fine. chromeOS requires you to go to penguin.linux.test to access the linux localhost.
+6. Now that XAMPP has been started, place the php file you want to open in '/opt/lampp/htdocs/[folder_name]'. You can name the folder whatever you want.
+7. To open the page, go to 'penguin.linux.test/[folder_name]/myFileName.php' in your browser. The page should be running there.
