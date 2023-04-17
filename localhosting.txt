@@ -1,0 +1,30 @@
+Here's how to host roundcube locally on your device
+
+1. Download the Roundcube folder and move it over to /opt/lampp/htdocs
+2. Follow the instructions in the INSTALL file by first installing Composer
+--> php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+--> sudo php composer-setup.php --install-dir=/bin
+3. Go to the roundcube folder and run the following command: php composer.phar install --no-dev
+4. In the roundcube folder, go to skins/elastic and run 'mkdir deps'
+4.1 Go back to the root folder and run 'bin/install-jsdeps.sh'
+5. 'sudo chown -R www-data.www-data /opt/lampp/htdocs/roundcube/' (not entirely sure what this one is for)
+6. Make the temp and logs folders in roundcube readable/writeable. 'sudo chmod -R 775 /opt/lampp/htdocs/roundcube/roundcubemail/{temp, logs}'
+7. Go to your sql server and create database and user permissions.
+    'create database roundcube;'
+    'create user roundcube@localhost identified by 'password';'
+    'grant all on roundcube.* to roundcube@localhost;'
+    'flush privileges;'
+    'quit;'
+8. Go to penguin.linux.test/roundcube/roundcubemail/installer for the next steps
+9. The installer page is split into 3 steps. The first step checks the requirements for your environment
+10. After confirming the environment, go onto the next step. On this page, scroll down to database setup and make sure that the database name, username, and password match what you put down in step 6.
+11. In the IMAP settings, make sure that imap_host is set to 'ssl://mail2.idigest.app'. The ssl is important.
+12. Not completely certain if this step is essential, but also set smtp_host to 'ssl://mail2.idigest.app'.
+13. In the plugins section, make sure to check 'enigma' to enable encryption.
+14. In the root folder, go to plugins/enigma and rename 'config.inc.php.dist' to 'config.inc.php' (You can do this by using 'mv config.inc.php.dist config.inc.php'). 
+14.1 Edit the config.inc.php file so that $config['enigma_pgp_homedir'] = null; is changed to $config['enigma_pgp_homedir'] = (wherever you want to store your encryption keys);
+    Note: I set mine to be $config['enigma_pgp_homedir'] = '/var/mail/pgpkeys'. Make sure that the permissions allow you to store it in the folder you want (needs chmod 777)
+15. After adding any other needed plugins in the plugins section of the page, click 'CREATE CONFIG' at the bottom. The website will generate a 'config.inc.php' file that needs to be downloaded and put in '/opt/lampp/htdocs/roundcube/roundcubemail/config'
+16. In step 3, click on 'Initializie database' to get started. From there, you can test the configurations by using 'Test SMTP config' and 'Test IMAP config' to send an email and login respectively.
+17. Go to penguin.linux.test/roundcube/roundcubemail to see if everything worked out. You should see the default roundcube login page as well have the ability to login.
+18. For security reasons, remove the entire installer folder after you complete setup.
