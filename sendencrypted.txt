@@ -1,0 +1,36 @@
+To send an encrypted email, you need the following:
+1. A PGP key. 
+2. The recipient's public key.
+
+Section A: To create your PGP key:
+1. In the roundcube installation, go to 'Settings' and click on PGP keys.
+2. In the rightmost section, click on 'Create' and type in a password that will be used with the PGP key.
+3. After typing in the password you want associated with the PGP key, click on 'Save' to create the key.
+
+Section B: To send/receive someone else's public key:
+1. Go to 'Compose' and set 'To' to whoever you want to send your public key. 
+2. In 'Options and Attachments', check the 'Attach my public key' option.
+3. Send the email.
+
+4. To receive a public key from another roundcube user, once they go through steps 1-3, go to your inbox and select the mail they sent.
+5. There should be an 'Import' button in that email to receive an attached PGP key. Click on it to receive the key.
+
+Section C: After you have both your own PGP key and the recipient's public key, here's how you send/receive an encrypted email.
+1. Go to 'Compose'
+2. Set 'To' to the person you want to send the encrypted email to.
+3. After filling out the content of your email, click on 'Encrypt this message' in 'Options and Attachments'.
+4. Send the email.
+
+5. When receiving an email, go to the received email. A small window saying 'Enter key passphrase' will pop up. Enter the password corresponding to your PGP key and click 'OK'.
+6. And just like that, you've both encrypted and decrypted an email using roundcube.
+
+Ways to 'eliminate' steps from the process.
+-In localhosting.txt, step 14 requires a local folder to store pgp keys. If the installation automatically points the storage folder to a cloud server instead, this step can be eliminated.
+--Small caveat in the fact that if you're in a place that doesn't allow access to the cloud server in question, you'll probably have a lot more trouble.
+---In the enigma config file, we know that one of the requested parameters is the location where the pgp keys are saved. If we can either point that config at a cloud storage or find 
+where it's used and point that part of the code at the cloud storage, we should be able to store keys on the cloud server without too much trouble.
+
+
+-Hypothetically, we could completely remove Section B from our steps by automatically querying a cloud server for a PGP key that corresponds with the recipient of a email.
+--On the page where emails are Composed, what we would need to do is add in a trigger where if 'To' is filled in with a valid email address and if 'Encrypt this message' is ticked, 
+the application should query a server/storage to determine if there's an existing pgp key for the recipient.
