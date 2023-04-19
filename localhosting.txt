@@ -25,6 +25,6 @@ Here's how to host roundcube locally on your device
 14.1 Edit the config.inc.php file so that $config['enigma_pgp_homedir'] = null; is changed to $config['enigma_pgp_homedir'] = (wherever you want to store your encryption keys);
     Note: I set mine to be $config['enigma_pgp_homedir'] = '/var/mail/pgpkeys'. Make sure that the permissions allow you to store it in the folder you want (needs chmod 777)
 15. After adding any other needed plugins in the plugins section of the page, click 'CREATE CONFIG' at the bottom. The website will generate a 'config.inc.php' file that needs to be downloaded and put in '/opt/lampp/htdocs/roundcube/roundcubemail/config'
-16. In step 3, click on 'Initializie database' to get started. From there, you can test the configurations by using 'Test SMTP config' and 'Test IMAP config' to send an email and login respectively.
+16. In step 3 of the installer, click on 'Initialize database' to get started. From there, you can test the configurations by using 'Test SMTP config' and 'Test IMAP config' to send an email and login respectively.
 17. Go to penguin.linux.test/roundcube/roundcubemail to see if everything worked out. You should see the default roundcube login page as well have the ability to login.
 18. For security reasons, remove the entire installer folder after you complete setup.
