@@ -1,0 +1,35 @@
+SET FOREIGN_KEY_CHECKS=0;
+
+CREATE TABLE `pgpkeys` (
+    `keyid` int(10) NOT NULL AUTO_INCREMENT,
+    `username` varchar(128),
+    `privateKey` text,
+    `publicKey` text,
+    `passphrase` text,
+    PRIMARY KEY(`keyid`),
+    FOREIGN KEY(`username`) REFERENCES users.username
+) ROW_FORMAT=DYNAMIC ENGINE=INNODB CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+INSERT INTO pgpkeys (username, privateKey, publicKey, passphrase) VALUES ()
+
+SELECT publicKey FROM pgpkeys WHERE username = ?
+
+function insert($save_data)
+    {
+        if (!is_array($save_data)) {
+            return false;
+        }
+
+
+        $this->cache = null;
+
+        $this->db->query(
+            "INSERT INTO " . $this->db->table_name($this->db_name, true)
+            . " (`username`, `privateKey`, `publicKey`, `passphrase`)"
+            . " VALUES (?, ?, ?, ?)",
+            $this->username,
+            $save_data['privateKey']
+        );
+
+        return $this->db->insert_id($this->db_name);
+    }
