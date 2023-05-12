@@ -14,6 +14,10 @@ INSERT INTO pgpkeys (username, privateKey, publicKey, passphrase) VALUES ()
 
 SELECT publicKey FROM pgpkeys WHERE username = ?
 
+SELECT privateKey, passphrase FROM pgpkeys WHERE username = ?
+
+UPDATE pgpkey SET privateKey = ?, passphrase = ? WHERE username = ?
+
 function insert($save_data)
     {
         if (!is_array($save_data)) {
