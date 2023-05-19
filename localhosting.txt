@@ -5,6 +5,8 @@ Here's how to host roundcube locally on your device
 --> php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 --> sudo php composer-setup.php --install-dir=/bin
 3. Go to the roundcube folder and run the following command: php composer.phar install --no-dev
+- sudo apt-get install php-mbstring
+- sudo apt-get install php-xml
 4. In the roundcube folder, go to skins/elastic and run 'mkdir deps'
 4.1 Go back to the root folder and run 'bin/install-jsdeps.sh'
 5. 'sudo chown -R www-data.www-data /opt/lampp/htdocs/roundcube/' (not entirely sure what this one is for)
