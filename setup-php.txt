@@ -1,15 +1,44 @@
 To open php files with xampp in linux:
 
 1. Download the XAMPP package for linux from this website: https://www.apachefriends.org/download.html
-	-Make sure you do not have apache2 installed, as this will mess with XAMPP later on. If you do, use 'sudo apt-get remove apache2' to remove the package.
+	-Make sure you do not have apache2 installed, as this will mess with XAMPP later on. 
+		If you do, use 'sudo apt-get remove apache2' to remove the package.
   -you need to run "sudo systemctl stop nginx" if you have nginx. Basically, XAMPP comes with apache webserver, any/all other webserver needs to be removed or stopped
   -"sudo systemctl stop mysql" -- to stop mysql as well.  XAMPP will start it. but it prefers this is stopped.
 2. Make the downloaded file executable by using 'sudo chmod 755 [package_name]'
 	-You can confirm permission by using 'ls -l [package_name]'
 3. Run the package using 'sudo ./[package_name]' and confirm yes for all prompts
 4. After installation finishes (this usually takes some time), use 'sudo /opt/lampp/lampp start' to start the service
-	-If you forgot to remove the apache2 package earlier, please do so now and us 'sudo /opt/lampp/lampp restart' to reboot the service
-5. Check that XAMPP is running properly by opening your browser and going to either 'localhost/dashboard' or 'penguin.linux.test/dashboard'. The XAMPP dashboard should show up.
+	-If you forgot to remove the apache2 package earlier, please do so now and us 'sudo /opt/lampp/lampp restart' 
+	to reboot the service
+5. Check that XAMPP is running properly by opening your browser and going to either 'localhost/dashboard' 
+or 'penguin.linux.test/dashboard'. The XAMPP dashboard should show up.
 	-For regular linux installations such as ubuntu and debian, localhost should be fine. chromeOS requires you to go to penguin.linux.test to access the linux localhost.
 6. Now that XAMPP has been started, place the php file you want to open in '/opt/lampp/htdocs/[folder_name]'. You can name the folder whatever you want.
 7. To open the page, go to 'penguin.linux.test/[folder_name]/myFileName.php' in your browser. The page should be running there.
+
+Read if you are on chromebook:  after every reboot, do the following:
+    sudo service nginx stop
+    sudo service apache2 stop
+    sudo service mysql stop
+    sudo /opt/lampp/lampp restart
+
+	//the system reboot loads up nginx and/or apache2 and/or mysql, all must be stopped, 
+	//and then restarted by the lampp -- which will setup them correctly for lampp's use 
+
+8. sudo vim /opt/lampp/etc/extra/httpd-xampp.conf, add 'Require all granted'
+	# since XAMPP 1.4.3
+		<Directory "/opt/lampp/phpMyAdmin-3.4.5-english">
+			AllowOverride AuthConfig Limit
+			Require all granted
+			Order allow,deny
+			Allow from all
+		</Directory>
+	so that "http://penguin.linux.test/phpmyadmin/" will work -- to use UI to administer the database
+
+9. php -i 
+	this will output php info, one line at top is like:
+		Loaded Configuration File => /etc/php/7.4/cli/php.ini
+10. sudo vim /etc/php/7.4/cli/php.ini
+		//search for error_log and put where you want log files to be
+		// the value is not set, and the system defaults to "/opt/lampp/logs"

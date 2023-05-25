@@ -1,32 +1,82 @@
-Here's how to host roundcube locally on your device
+Here's how to host roundcube locally on your device <tested on chromebook's linux>
 
-1. Download the Roundcube folder and move it over to /opt/lampp/htdocs
+1. git clone https://github.com/gracetech-services/roundcubemail
+1.1 cd roundcubemail
+1.2 git checkout gracetech
+1.3 sudo apt-get install php
+
 2. Follow the instructions in the INSTALL file by first installing Composer
 --> php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 --> sudo php composer-setup.php --install-dir=/bin
-3. Go to the roundcube folder and run the following command: php composer.phar install --no-dev
-- sudo apt-get install php-mbstring
-- sudo apt-get install php-xml
-4. In the roundcube folder, go to skins/elastic and run 'mkdir deps'
-4.1 Go back to the root folder and run 'bin/install-jsdeps.sh'
-5. 'sudo chown -R www-data.www-data /opt/lampp/htdocs/roundcube/' (not entirely sure what this one is for)
-6. Make the temp and logs folders in roundcube readable/writeable. 'sudo chmod -R 775 /opt/lampp/htdocs/roundcube/roundcubemail/{temp, logs}'
+--> cp composer.json-dist composer.json
+2.2 sudo apt-get install php-mbstring,
+2.3 sudo apt-get install php-xml
+
+3. php composer.phar install --no-dev
+4. cd skins/elastic and run 'mkdir deps'
+4.1 Go back to the root folder of roundcubmail and run 'bin/install-jsdeps.sh'
+
+4.2 <only for dev self-host> -- 
+    cd /opt/lampp/htdocs
+    sudo ln ~/roundcubemail -symbolic
+    <<this brings the github repo under the root of php enabled webroot>>
+    <<in production, this probably should be a copy over>>
+
+    4.3 to make the php web to follow on symbolic link, do the following
+        sudo vim /opt/lampp/etc/httpd.conf
+        add the line: under <Directory />
+            Options FollowSymLinks
+
+
+5. 'sudo chown -R www-data.www-data /opt/lampp/htdocs/roundcubemail/' (not entirely sure what this one is for)
+6. Make the temp and logs folders in roundcubemail readable/writeable. '
+    sudo chmod -R 775 /opt/lampp/htdocs/roundcubemail/{temp, logs}
+
+
 7. Go to your sql server and create database and user permissions.
+    sudo mysql -h 127.0.0.1 -P 3306 -u root
     'create database roundcube;'
     'create user roundcube@localhost identified by 'password';'
     'grant all on roundcube.* to roundcube@localhost;'
     'flush privileges;'
     'quit;'
-8. Go to penguin.linux.test/roundcube/roundcubemail/installer for the next steps
+
+7.1. If you use git sources compile css files for the Elastic skin (required
+   lessc >= 2.5.2):
+    npm install -g less
+    npm install -g less-plugin-clean-css
+   $ cd skins/elastic
+   $ lessc --clean-css="--s1 --advanced" styles/styles.less > styles/styles.min.css
+   $ lessc --clean-css="--s1 --advanced" styles/print.less > styles/print.min.css
+   $ lessc --clean-css="--s1 --advanced" styles/embed.less > styles/embed.min.css
+
+8. Go to penguin.linux.test/roundcubemail/installer for the next steps
+
 9. The installer page is split into 3 steps. The first step checks the requirements for your environment
-10. After confirming the environment, go onto the next step. On this page, scroll down to database setup and make sure that the database name, username, and password match what you put down in step 6.
+10. After confirming the environment, go onto the next step. On this page, scroll down to database setup and 
+make sure that the database name, username, and password match what you put down in step 6.
+
 11. In the IMAP settings, make sure that imap_host is set to 'ssl://mail2.idigest.app'. The ssl is important.
 12. Not completely certain if this step is essential, but also set smtp_host to 'ssl://mail2.idigest.app'.
+
 13. In the plugins section, make sure to check 'enigma' to enable encryption.
-14. In the root folder, go to plugins/enigma and rename 'config.inc.php.dist' to 'config.inc.php' (You can do this by using 'mv config.inc.php.dist config.inc.php'). 
-14.1 Edit the config.inc.php file so that $config['enigma_pgp_homedir'] = null; is changed to $config['enigma_pgp_homedir'] = (wherever you want to store your encryption keys);
-    Note: I set mine to be $config['enigma_pgp_homedir'] = '/var/mail/pgpkeys'. Make sure that the permissions allow you to store it in the folder you want (needs chmod 777)
-15. After adding any other needed plugins in the plugins section of the page, click 'CREATE CONFIG' at the bottom. The website will generate a 'config.inc.php' file that needs to be downloaded and put in '/opt/lampp/htdocs/roundcube/roundcubemail/config'
+
+14. In the root folder, go to plugins/enigma and rename 'config.inc.php.dist' to 'config.inc.php' 
+(You can do this by using 'mv config.inc.php.dist config.inc.php'). 
+14.1 Edit the config.inc.php file so that $config['enigma_pgp_homedir'] = null; 
+is changed to $config['enigma_pgp_homedir'] = (wherever you want to store your encryption keys);
+    Note: I set mine to be $config['enigma_pgp_homedir'] = '/var/mail/pgpkeys'. 
+    Make sure that the permissions allow you to store it in the folder you want (needs chmod 777)
+15. After adding any other needed plugins in the plugins section of the page, click 'CREATE CONFIG' at the bottom. 
+The website will generate a 'config.inc.php' file that needs to be downloaded and 
+put in '/opt/lampp/htdocs/roundcubemail/config'
 16. In step 3 of the installer, click on 'Initialize database' to get started. From there, you can test the configurations by using 'Test SMTP config' and 'Test IMAP config' to send an email and login respectively.
-17. Go to penguin.linux.test/roundcube/roundcubemail to see if everything worked out. You should see the default roundcube login page as well have the ability to login.
+17. Go to penguin.linux.test/roundcubemail to see if everything worked out. You should see the default roundcube login page as well have the ability to login.
 18. For security reasons, remove the entire installer folder after you complete setup.
+    <<BUT>>
+    public_html doesn't have installer subdirectory, but links to everything else that's needed for production.
+    public_html is the directory that contains what should be pushed to production
+    
+
+
+            
